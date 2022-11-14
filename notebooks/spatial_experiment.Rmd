@@ -1,0 +1,60 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+We will take a look at `ggspavis` and the `SpatialExperiment` object in Bioconductor.
+
+```{r}
+library(zellkonverter)
+library(SpatialExperiment)
+library(ggspavis)
+```
+
+Let's read it and convert it with zellkonverter
+
+```{r}
+path_adata <- "/data/day3_spatial_transcriptomics"
+ad <- readH5AD(paste0(path_adata,"/V10F24-105_A1_destvi.h5ad"))
+```
+
+Look at the SpatialExperimentObject
+```{r}
+coords <- as.matrix(reducedDim(ad, "spatial"))
+colnames(coords) = c("x","y")
+spe <- SpatialExperiment(
+    assay = assay(ad,"X"), 
+    colData = ad@colData, 
+    spatialCoords = coords,
+)
+spe[["sample_id"]] <- "V10F24-105_A1"
+spe
+```
+
+```{r}
+path_img <- "/home/rstudio/adv_singlecell_2022/day3_spatial_transcriptomics/V10F24-105_A1.png"
+spe <- addImg(spe, 
+    sample_id = "V10F24-105_A1", 
+    image_id = "V10F24-105_A1",
+    imageSource = path_img, 
+    scaleFactor = 0.04155585, 
+    load = TRUE)
+```
+
+```{r}
+colData(spe)
+```
+
+
+```{r}
+plotSpots(spe,annotate = "Stromal.cells")
+```
+
+```{r}
+plotVisium(spe,fill = "array_row")
+```
+```{r}
+plotVisium(spe,fill = "Stromal.cells",)
+```
+
+
