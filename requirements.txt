@@ -9,3 +9,4 @@ pooch
 scikit-image
 spatial-analysis-toolkit[tissuumaps]
 ipykernel
+
