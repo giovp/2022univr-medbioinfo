@@ -4,3 +4,5 @@ squidpy>=1.2.3
 spatial-eggplant
 scikit-misc
 jupyterlab
+git+https://github.com/ott-jax/ott.git@main
+git+https://github.com/theislab/moscot.git@main
