@@ -9,13 +9,15 @@ We will take a look at `ggspavis` and the `SpatialExperiment` object in Biocondu
 library(zellkonverter)
 library(SpatialExperiment)
 library(ggspavis)
+library(stardust)
+library(RColorBrewer)
 ```
 
 Let's read it and convert it with zellkonverter
 
 ```{r}
-path_adata <- "/data/day3_spatial_transcriptomics"
-ad <- readH5AD(paste0(path_adata,"/V10F24-105_A1_destvi.h5ad"))
+path_adata <- "/Users/giovanni.palla/Datasets/advomics_data_spatial"
+ad <- readH5AD(paste0(path_adata,"/V10F24-105_A1_stereoscope.h5ad"))
 ```
 
 Look at the SpatialExperimentObject
@@ -32,7 +34,7 @@ spe
 ```
 
 ```{r}
-path_img <- "/home/rstudio/adv_singlecell_2022/day3_spatial_transcriptomics/V10F24-105_A1.png"
+path_img <- "./V10F24-105_A1.png"
 spe <- addImg(spe, 
     sample_id = "V10F24-105_A1", 
     image_id = "V10F24-105_A1",
@@ -56,5 +58,24 @@ plotVisium(spe,fill = "array_row")
 ```{r}
 plotVisium(spe,fill = "Stromal.cells",)
 ```
+```{r}
+countMatrix = as.data.frame(spe@assays@data@listData)
+spotPositions = as.data.frame(spatialCoords(spe))
+```
+
+
+```{r}
+output <- weightStardust(
+  countMatrix = countMatrix, spotPositions = spotPositions, 
+                         spaceWeight = 0.75, pcaDimensions=10, res=0.8)
+clusters_identities <- output@active.ident
+```
+Plot cluster identities
+```{r}
+spe@colData$stardust_clusters <- clusters_identities
+getPalette = colorRampPalette(brewer.pal(12, "Set1"))
+plotSpots(spe,annotate = "stardust_clusters",palette = getPalette(12), size=2)
+```
+
 
 

@@ -1,11 +1,8 @@
-# R script to install requirements for exercises -------------------------------
-
-## global variables (edit in this section) -------------------------------------
 pkgs <- c("zellkonverter","SpatialExperiment","ggspavis", "scater", "scran")
 
 
 ## install Bioconductor --------------------------------------------------------
-biocversion <- "3.14"
+biocversion <- "3.16"
 if (!require("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
@@ -26,5 +23,9 @@ for (pkg in basename(pkgs)) {
         quit(status = 1, save = "no")
     }
 }
+
+install.packages("devtools")
+devtools::install_github("InfOmics/stardust")
+install.packages("Seurat")
 
 sessionInfo()
